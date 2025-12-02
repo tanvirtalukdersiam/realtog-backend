@@ -1,0 +1,122 @@
+asyncapi: "2.6.0"
+info:
+  title: Realtog WebSocket API
+  version: "1.0.0"
+  description: |
+    WebSocket API for Realtog application.
+    Handles real-time messaging and presence.
+servers:
+  development:
+    url: http://localhost:3000
+    protocol: socket.io
+    description: Development server
+channels:
+  /:
+    publish:
+      description: Client sends events to the server
+      message:
+        oneOf:
+          - $ref: "#/components/messages/JoinAdmin"
+          - $ref: "#/components/messages/UserAdminJoin"
+          - $ref: "#/components/messages/UserAdminLeave"
+    subscribe:
+      description: Server sends events to the client
+      message:
+        oneOf:
+          - $ref: "#/components/messages/Error"
+          - $ref: "#/components/messages/UserAdminNewMessage"
+          - $ref: "#/components/messages/UserAdminChatUpdated"
+
+components:
+  messages:
+    JoinAdmin:
+      name: join-admin
+      title: Join Admin Room
+      summary: Admin/Moderator joins the admin room to receive all chat updates.
+      payload:
+        type: object
+        additionalProperties: false
+
+    UserAdminJoin:
+      name: user-admin:join
+      title: Join User-Admin Chat
+      summary: Join a specific user-admin chat room.
+      payload:
+        type: string
+        description: The chatId to join.
+
+    UserAdminLeave:
+      name: user-admin:leave
+      title: Leave User-Admin Chat
+      summary: Leave a specific user-admin chat room.
+      payload:
+        type: string
+        description: The chatId to leave.
+
+    Error:
+      name: error
+      title: Error Message
+      summary: Server sends an error message to the client.
+      payload:
+        type: object
+        properties:
+          message:
+            type: string
+            description: Error description.
+
+    UserAdminNewMessage:
+      name: user-admin:new-message
+      title: New Message
+      summary: Received when a new message is sent in a chat room.
+      payload:
+        type: object
+        properties:
+          id:
+            type: string
+          chatId:
+            type: string
+          senderId:
+            type: string
+          senderName:
+            type: string
+          senderType:
+            type: string
+            enum: [user, admin]
+          content:
+            type: string
+          timestamp:
+            type: string
+            format: date-time
+          read:
+            type: boolean
+          images:
+            type: array
+            items:
+              type: string
+
+    UserAdminChatUpdated:
+      name: user-admin:chat-updated
+      title: Chat Updated
+      summary: Received when a chat summary is updated.
+      payload:
+        type: object
+        properties:
+          id:
+            type: string
+          userId:
+            type: string
+          userName:
+            type: string
+          userEmail:
+            type: string
+          initials:
+            type: string
+          lastMessage:
+            type: string
+          lastMessageTime:
+            type: string
+            format: date-time
+          unreadCount:
+            type: integer
+          online:
+            type: boolean

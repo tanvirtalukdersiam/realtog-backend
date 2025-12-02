@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@src/*": ["./*"],
+      "@config/*": ["./config/*"],
+      "@modules/*": ["./modules/*"],
+      "@middlewares/*": ["./middlewares/*"],
+      "@utils/*": ["./utils/*"],
+      "@constants/*": ["./constants/*"],
+      "@database/*": ["./database/*"]
+    }
+  }
+}
+
